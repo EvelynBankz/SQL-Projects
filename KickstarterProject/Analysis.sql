@@ -111,9 +111,11 @@ limit 5;
 -- Canceled projects --
 select * from 2018starter
 where state = 'canceled';
+
 -- Live projects --
 select * from 2018starter 
 where state = 'live';
+
 -- Suspended projects --
 select * from 2018starter
 where state = 'suspended';
