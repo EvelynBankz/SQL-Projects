@@ -39,7 +39,81 @@ from 2018starter
 group by country;
 
 -- Number of country per category --
-select distinct(category), count(distinct(country)) as totalNumberOfCountries
+select category, count(distinct(country)) as totalNumberOfCountries
 from 2018starter
 group by category;
 
+-- Failed projects -- 
+select * from 2018starter 
+where state ='failed';
+
+-- Goal set for failed projects-- 
+select goal, count(ID) as projects
+from 2018starter where state = 'failed'
+group by goal;
+
+-- Categories of failed projects --
+select category, count(ID) as projects
+from 2018starter where state = 'failed'
+group by category
+order by projects desc;
+
+-- Countries of failed projects --
+select country, count(ID) as projects
+from 2018starter where state = 'failed'
+group by country
+order by projects desc;
+
+-- Project Duration of failed projects --
+select projectdurationDays, count(ID) as projects
+from 2018starter where state = 'failed'
+group by projectdurationDays
+order by projects desc;
+
+-- Successful projects --
+select * from 2018starter 
+where state = 'successful';
+
+-- Goal set for successful projects-- 
+select distinct goal, count(ID) as projects
+from 2018starter where state = 'successful'
+group by goal
+order by projects desc;
+
+-- Categories of successful projects --
+select category, count(ID) as projects
+from 2018starter where state = 'successful'
+group by category
+order by projects desc;
+
+-- Countries of successful projects --
+select country, count(ID) as projects
+from 2018starter where state = 'successful'
+group by country
+order by projects desc;
+
+-- Project Duration of successful projects --
+select projectdurationDays, count(ID) as projects
+from 2018starter where state = 'successful'
+group by projectdurationDays
+order by projects desc;
+
+-- Analyze countries, categories and duration with the highest number of failed and successful projects --
+select country, count(ID) as projects
+from 2018starter
+where state = 'successful'
+group by country
+order by projects desc
+limit 5;
+
+-- what is the goal and pledged and backers for the top five successful and failed projects in countries, categories and projectduration --
+
+-- Canceled projects --
+select * from 2018starter
+where state = 'canceled';
+-- Live projects --
+select * from 2018starter 
+where state = 'live';
+-- Suspended projects --
+select * from 2018starter
+where state = 'suspended';
