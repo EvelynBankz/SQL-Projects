@@ -1,22 +1,21 @@
---  Analysis --
 -- Getting the number of projects in each state --
 select  state, count(state) as status
 from 2018starter 
 group by state;
 
--- Getting the number of backers per category --
-select category, count(backers) as Investors
+-- Getting the number of backers per main category --
+select main_category, count(backers) as Investors
 from 2018starter
-group by category;
+group by main_category;
 
 -- Total number of categories --
-select count(distinct(category)) as totalNumberOfCategories
+select count(distinct(main_category)) as totalNumberOfCategories
 from 2018starter;
 
--- Getting the total number of projects in each category --
-select category, count(name) as projects
+-- Getting the total number of projects in each  main category --
+select main_category, count(name) as projects
 from 2018starter
-group by category;
+group by main_category;
 
 -- Backers per Country --
 select country, count(backers) as countryBackers
@@ -34,14 +33,14 @@ select count(distinct(country)) as totalNumberOfCountries
 from 2018starter;
 
 -- Number of projects per country --
-select distinct(country), count(distinct(name)) as totalNumberOfProjects
+select distinct(country), count(ID) as totalNumberOfProjects
 from 2018starter
 group by country;
 
--- Number of country per category --
-select category, count(distinct(country)) as totalNumberOfCountries
+-- Number of country per main category --
+select main_category, count(distinct(country)) as totalNumberOfCountries
 from 2018starter
-group by category;
+group by main_category;
 
 -- Failed projects -- 
 select * from 2018starter 
@@ -52,10 +51,10 @@ select goal, count(ID) as projects
 from 2018starter where state = 'failed'
 group by goal;
 
--- Categories of failed projects --
-select category, count(ID) as projects
+-- Main Categories of failed projects --
+select main_category, count(ID) as projects
 from 2018starter where state = 'failed'
-group by category
+group by main_category
 order by projects desc;
 
 -- Countries of failed projects --
@@ -80,11 +79,12 @@ from 2018starter where state = 'successful'
 group by goal
 order by projects desc;
 
--- Categories of successful projects --
-select category, count(ID) as projects
+-- Main Categories of successful projects --
+select main_category, count(ID) as projects
 from 2018starter where state = 'successful'
-group by category
+group by main_category
 order by projects desc;
+
 
 -- Countries of successful projects --
 select country, count(ID) as projects
@@ -98,16 +98,6 @@ from 2018starter where state = 'successful'
 group by projectdurationDays
 order by projects desc;
 
--- Analyze countries, categories and duration with the highest number of failed and successful projects --
-select country, count(ID) as projects
-from 2018starter
-where state = 'successful'
-group by country
-order by projects desc
-limit 5;
-
--- what is the goal and pledged and backers for the top five successful and failed projects in countries, categories and projectduration --
-
 -- Canceled projects --
 select * from 2018starter
 where state = 'canceled';
@@ -119,3 +109,49 @@ where state = 'live';
 -- Suspended projects --
 select * from 2018starter
 where state = 'suspended';
+
+-- Top 5 successful maincategory by projects  --
+with subquery as
+ (select main_category, count(ID) as projects
+ from 2018starter
+ where state = 'successful'
+ group by main_category
+ order by projects 
+ limit 5)
+select main_category, projects, rank() over(order by projects desc) as ranks from subquery;
+  
+-- Top 5 failed maincategory by projects  --
+with subquery as
+ (select main_category, count(ID) as projects
+ from 2018starter
+ where state = 'failed'
+ group by main_category
+ order by projects 
+ limit 5)
+select main_category, projects, rank() over(order by projects desc) as ranks from subquery;
+
+-- Analyze countries, categories and duration with the highest number of failed and successful projects --
+SELECT p.*
+FROM `2018starter` p
+JOIN (
+    SELECT country
+    FROM `2018starter`
+    GROUP BY country
+    ORDER BY COUNT(ID) DESC
+    LIMIT 5
+) AS top_countries ON p.country = top_countries.country
+where state = 'successful';
+
+SELECT p.*
+FROM `2018starter` p
+JOIN (
+    SELECT country
+    FROM `2018starter`
+    GROUP BY country
+    ORDER BY COUNT(ID) DESC
+    LIMIT 5
+) AS top_countries ON p.country = top_countries.country
+where state = 'failed';
+
+
+
