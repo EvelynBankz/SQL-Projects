@@ -342,5 +342,42 @@ set SQL_SAFE_UPDATES = 1;
 
 select* from 2018starter; 
 
+--  Adding new column for LaunchMonth, Launchyear, deadlinemonth, deadlineyear and launchseason --
+alter table 2018starter
+add column launchmonth int,
+add column launchyear int,
+add column deadlinemonth int,
+add column deadlineyear int,
+add column launchseason varchar(20);
 
+-- Updating new column for LaunchMonth, Launchyear, deadlinemonth, deadlineyear --
+set SQL_SAFE_UPDATES = 0;
+update 2018starter
+set 
+  launchmonth = month(launched),
+  launchyear = year(launched),
+  deadlinemonth = month(deadline),
+  deadlineyear = year(deadline),
+  launchseason = case
+  when month(launched) in (12, 1, 2) then 'Winter'
+  when month(launched) in (3, 4, 5) then 'Spring'
+  when month(launched) in (6, 7, 8) then 'Summer'
+  when month(launched) in (9, 10, 11) then 'Fall'
+  else 'Unknown'
+end;  
+set SQL_SAFE_UPDATES = 1;
 
+-- Add new columns Month name --
+alter table 2018starter
+add column launch_month_name varchar(20),
+add column deadline_month_name varchar(20);
+
+-- Update columns Monthname for Launched and Deadline --
+set SQL_SAFE_UPDATES = 0;
+update 2018starter
+set 
+  launch_month_name = monthname(launched),
+  deadline_month_name = monthname(deadline);
+set SQL_SAFE_UPDATES = 1;
+
+select* from 2018starter; 
