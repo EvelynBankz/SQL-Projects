@@ -13,7 +13,7 @@ select count(distinct(main_category)) as totalNumberOfCategories
 from 2018starter;
 
 -- Getting the total number of projects in each  main category --
-select main_category, count(name) as projects
+select main_category, count(id) as projects
 from 2018starter
 group by main_category;
 
@@ -26,7 +26,6 @@ group by country;
 select country, round(sum(usd_pledged_real), 0) as totalPledgedUSD
 from 2018starter
 group by country;
-
 
 -- Total number of countries --
 select count(distinct(country)) as totalNumberOfCountries
@@ -152,6 +151,3 @@ JOIN (
     LIMIT 5
 ) AS top_countries ON p.country = top_countries.country
 where state = 'failed';
-
-
-
